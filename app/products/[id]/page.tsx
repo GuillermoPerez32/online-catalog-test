@@ -1,17 +1,17 @@
 import Image from "next/image";
-import type { Product } from "@/types";
 import { AddToCartButton } from "@/components/AddToCartButton";
+import { getProduct } from "@/api/products";
 
-type PageProps = {
+interface PageProps {
   params: { id: string };
-};
+}
 
-async function getProduct(id: string): Promise<Product> {
-  const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) throw new Error("Failed to fetch product");
-  return res.json();
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const product = await getProduct(params.id);
+  return {
+    title: product.title,
+    description: product.description,
+  };
 }
 
 export default async function ProductDetail({ params }: PageProps) {
@@ -35,7 +35,9 @@ export default async function ProductDetail({ params }: PageProps) {
           {product.category}
         </p>
         <p className="mt-4 text-2xl font-bold">${product.price.toFixed(2)}</p>
-        <p className="mt-4 text-sm leading-6 text-muted-foreground">{product.description}</p>
+        <p className="mt-4 text-sm leading-6 text-muted-foreground">
+          {product.description}
+        </p>
         <div className="mt-6">
           <AddToCartButton product={product} />
         </div>

@@ -3,6 +3,7 @@
 import { X, Plus, Minus, Trash2 } from "lucide-react";
 import { useCartStore } from "@/store/cart";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 export function CartSidebar({
   openMobile,
@@ -14,12 +15,18 @@ export function CartSidebar({
   const { items, increase, decrease, removeItem, total, clear } =
     useCartStore();
 
+  // Avoid hydration mismatch by rendering neutral values until mounted
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const viewItems = mounted ? items : [];
+  const viewTotal = mounted ? total() : 0;
+
   const content = (
-    <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b p-4">
+    <div className="flex h-full flex-col p-2">
+      <div className="flex items-center justify-between p-4">
         <h2 className="text-lg font-semibold">Tu Carrito</h2>
         <div className="flex items-center gap-2">
-          {items.length > 0 && (
+          {viewItems.length > 0 && (
             <Button variant="ghost" size="sm" onClick={clear} title="Vaciar">
               Vaciar
             </Button>
@@ -36,12 +43,12 @@ export function CartSidebar({
         </div>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {items.length === 0 ? (
+        {viewItems.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             No hay productos en el carrito.
           </p>
         ) : (
-          items.map((item) => (
+          viewItems.map((item) => (
             <div
               key={item.id}
               className="flex gap-3 items-start border rounded-md p-3"
@@ -92,9 +99,9 @@ export function CartSidebar({
       <div className="border-t p-4">
         <div className="flex items-center justify-between text-sm mb-3">
           <span>Total</span>
-          <span className="font-semibold">${total().toFixed(2)}</span>
+          <span className="font-semibold">${viewTotal.toFixed(2)}</span>
         </div>
-        <Button className="w-full" disabled={items.length === 0}>
+        <Button className="w-full" disabled={viewItems.length === 0}>
           Pagar
         </Button>
       </div>
@@ -103,12 +110,10 @@ export function CartSidebar({
 
   return (
     <>
-      {/* Desktop fixed sidebar */}
       <aside className="hidden md:block border-l h-screen sticky top-0 bg-background">
         <div className="w-[360px] h-full">{content}</div>
       </aside>
 
-      {/* Mobile drawer */}
       {openMobile && (
         <div className="md:hidden fixed inset-0 z-50">
           <div
