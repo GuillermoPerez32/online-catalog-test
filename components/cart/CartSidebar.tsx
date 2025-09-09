@@ -51,7 +51,7 @@ export function CartSidebar({
           viewItems.map((item) => (
             <div
               key={item.id}
-              className="flex gap-3 items-start border rounded-md p-3"
+              className="flex gap-3 items-center border rounded-md p-3"
             >
               <img
                 src={item.image}
@@ -61,7 +61,10 @@ export function CartSidebar({
               <div className="flex-1">
                 <p className="text-sm font-medium line-clamp-2">{item.title}</p>
                 <p className="text-xs text-muted-foreground">
-                  ${item.price.toFixed(2)}
+                  <span>${item.price.toFixed(2)}</span>
+                  <span className="font-semibold">
+                    {" -> "}${(item.quantity * item.price).toFixed(2)}
+                  </span>
                 </p>
                 <div className="mt-2 flex items-center gap-2">
                   <Button
@@ -82,9 +85,9 @@ export function CartSidebar({
                     <Plus className="size-4" />
                   </Button>
                   <Button
-                    className="ml-auto"
+                    className="ml-auto text-destructive"
                     size="icon"
-                    variant="destructive"
+                    variant="link"
                     onClick={() => removeItem(item.id)}
                     title="Eliminar"
                   >
