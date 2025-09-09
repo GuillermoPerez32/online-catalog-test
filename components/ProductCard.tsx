@@ -24,6 +24,9 @@ export function ProductCard({ product }: { product: Product }) {
         <h3 className="mt-3 line-clamp-2 text-sm font-medium">
           {product.title}
         </h3>
+        <span className="mt-1 inline-block rounded-full border px-2 py-0.5 text-[10px] text-muted-foreground">
+          {product.category}
+        </span>
         <p className="mt-1 text-base font-semibold">
           ${product.price.toFixed(2)}
         </p>

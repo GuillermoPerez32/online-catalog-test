@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { AddToCartButton } from "@/components/AddToCartButton";
+import { Star } from "lucide-react";
 import { getProduct } from "@/api/products";
 
 interface PageProps {
@@ -34,6 +35,11 @@ export default async function ProductDetail({ params }: PageProps) {
         <p className="mt-2 inline-block rounded-full border px-3 py-1 text-xs text-muted-foreground">
           {product.category}
         </p>
+        <div className="mt-2 flex items-center text-sm text-muted-foreground">
+          <Star className="mr-1 size-4 text-yellow-500 fill-yellow-500" />
+          <span className="mr-1">{product.rating.rate.toFixed(1)}</span>
+          <span>({product.rating.count})</span>
+        </div>
         <p className="mt-4 text-2xl font-bold">${product.price.toFixed(2)}</p>
         <p className="mt-4 text-sm leading-6 text-muted-foreground">
           {product.description}
