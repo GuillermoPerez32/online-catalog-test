@@ -10,3 +10,5 @@ interface Product {
     count: number;
   };
 }
+
+export type { Product };
